@@ -1,0 +1,49 @@
+const ethGasStationApiUrl = `https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=INSERT API KEY HERE`;
+const req = new Request(ethGasStationApiUrl);
+const res = await req.loadJSON();
+
+if (config.runsInWidget) {
+    const widget = new ListWidget();
+
+    const title = widget.addText("Gas Prices");
+    title.textColor = Color.white();
+    title.textOpacity = 0.8;
+    title.font = new Font("Helvetica-Light ", 10);
+
+    widget.addSpacer(2);
+    const fastestGas = (res.result.FastGasPrice);
+    const fastest = widget.addText(`Trader: ${fastestGas}`);
+    fastest.textColor = Color.white();
+    fastest.font = new Font("Courier", 14);
+
+    widget.addSpacer(2);
+    const fastGas = (res.result.SafeGasPrice);
+    const fast = widget.addText(`Fast: ${fastGas}`);
+    fast.textColor = Color.white();
+    fast.font = new Font("Courier", 14);
+
+    widget.addSpacer(2);
+    const averageGas = (res.result.ProposeGasPrice);
+ const average = widget.addText(`Standard: ${averageGas}`);
+    average.textColor = Color.white();
+    average.font = new Font("Courier", 14);
+
+    widget.addSpacer(2);
+    const date = new Date();
+    const lastUpdate = widget.addText(`LastUpdate: ${date.getHours()}:${date.getMinutes()}`);
+    lastUpdate.textColor = Color.white();
+    title.textOpacity = 0.8;
+    lastUpdate.font = new Font("Helvetica-Light", 10);
+
+    if (fastGas < 25) {
+        let n = new Notification()
+        n.title = "🤑 Gas cheap! Under 25"
+        // n.subtitle = ""
+        n.body = "Make yours swap baby"
+        n.sound = "alert"
+        n.schedule();
+    }
+
+    Script.setWidget(widget);
+    Script.complete();
+}
